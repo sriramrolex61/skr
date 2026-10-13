@@ -20,8 +20,16 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: 'Server error' });
 });
 
-const PORT = process.env.PORT || 5000;
-
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+let connecting;
+app.use(async (_req, _res, next) => {
+  connecting ||= connectDB();
+  await connecting;
+  next();
 });
+
+export default app;
+
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+}
