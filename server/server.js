@@ -1,35 +1,21 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import connectDB from './config/db.js';
-import authRoutes from './routes/auth.js';
-import dashboardRoutes from './routes/dashboard.js';
+import mongoose from 'mongoose';
 
-const app = express();
+let cached;
 
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
-app.use(express.json());
+export default async function connectDB() {
+  if (!process.env.MONGO_URI) throw new Error('MONGO_URI is not set');
 
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
-app.use('/api/auth', authRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-
-// eslint-disable-next-line no-unused-vars
-app.use((err, _req, res, _next) => {
-  console.error(err);
-  res.status(500).json({ message: 'Server error' });
-});
-
-let connecting;
-app.use(async (_req, _res, next) => {
-  connecting ||= connectDB();
-  await connecting;
-  next();
-});
-
-export default app;
-
-if (!process.env.VERCEL) {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`API running on http://localhost:${PORT}`));
+  if (!cached) {
+    cached = mongoose
+      .connect(process.env.MONGO_URI)
+      .then((m) => {
+        console.log('MongoDB connected');
+        return m;
+      })
+      .catch((err) => {
+        cached = null; // allow a retry on the next request
+        throw err;
+      });
+  }
+  return cached;
 }
