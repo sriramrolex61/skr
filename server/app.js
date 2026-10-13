@@ -45,7 +45,18 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-app.use(cors(corsOptions));
+
+app.use(
+  cors({
+    origin: 'https://skr-eight.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 204,
+  })
+);
+
+app.use(express.json());
+
 app.use(express.json());
 
 
