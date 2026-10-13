@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 244 245 247;
+  --card: 255 255 255;
+  --line: 235 236 239;
+  --fg: 13 15 26;
+  --muted: 107 110 122;
+  --faint: 185 187 196;
+  --track: 238 239 242;
+  --strong: 11 18 80;
+  --soft: 164 168 196;
+  --btn: 11 18 80;
+  --hover: 236 238 242;
+  --ok: 23 128 61;
+}
+
+.dark {
+  --bg: 8 8 10;
+  --card: 18 19 23;
+  --line: 28 29 35;
+  --fg: 242 242 244;
+  --muted: 140 142 153;
+  --faint: 85 87 95;
+  --track: 36 37 44;
+  --strong: 141 158 255;
+  --soft: 59 62 87;
+  --btn: 27 42 107;
+  --hover: 23 24 30;
+  --ok: 110 231 183;
+}
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-[13px] text-fg antialiased;
+  }
+}
